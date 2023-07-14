@@ -8,6 +8,8 @@ using System.Net.WebSockets;
 using System.Threading;
 using System.Net.Sockets;
 using System.Security.Policy;
+using HangMe.Engine.Client.Classes.Skeletons;
+using HangMe.Engine.Server.Enumerations;
 
 namespace HangMe.Engine.Server
 {
@@ -20,6 +22,7 @@ namespace HangMe.Engine.Server
         private bool _isDedicated;
         private HttpListener _httpListener;
         private CancellationTokenSource _cancellationTokenSource;
+        private Server.GameState.AHangGameState _gameState = new Server.GameState.AHangGameState(null);
 
         public server(int port = 7777, string host = "http://localhost:", bool isLocal = true, bool isDedicated = true) { 
             _port = port;
@@ -75,6 +78,15 @@ namespace HangMe.Engine.Server
                     // Handle received text message
                     string receivedMessage = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
                     Console.WriteLine("Received: " + receivedMessage);
+
+                    if(receivedMessage != null)
+                    {
+                        if(receivedMessage == EHangServerFunctions.ServerNotifyUserLogon)
+                        {
+                            Console.WriteLine("[hangMe Websocket Server INFO]: Player has connected, sending GameState");
+                            _gameState._playerCount = _gameState._playerCount + 1; // notify of user logon
+                        }
+                    }
 
                     // Send a response back to the client
                     string responseMessage = "Server received: " + receivedMessage;

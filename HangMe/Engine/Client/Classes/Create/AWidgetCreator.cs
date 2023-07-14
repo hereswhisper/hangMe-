@@ -14,11 +14,13 @@ namespace HangMe.Engine.Client.Classes.Create
         /// Creates a Widget onto the canvas
         /// </summary>
         /// <param name="name"></param>
-        public async Task<int> createWidgetAsync(string name)
+        public async Task<int> createWidgetAsync(string name, string arg = "")
         {
             ADisclaimerScreen _aDisclaimerScreen = new ADisclaimerScreen();
             AStartMenuScreen _aStartMenuScreen = new AStartMenuScreen();
             ALoginScreen _aLoginScreen = new ALoginScreen();
+            AConnectIPScreen _aConnectIpScreen = new AConnectIPScreen();
+            AConnectionScreen _aConnectionScreen = new AConnectionScreen();
 
             bool createdWidget = false;
             switch (name)
@@ -34,6 +36,14 @@ namespace HangMe.Engine.Client.Classes.Create
                     break;
                 case "login":
                     await _aLoginScreen.showContents();
+                    createdWidget = true;
+                    break;
+                case "connectip":
+                    await _aConnectIpScreen.showContents();
+                    createdWidget = true;
+                    break;
+                case "connectionscreen":
+                    await _aConnectionScreen.showContents(arg);
                     createdWidget = true;
                     break;
             }

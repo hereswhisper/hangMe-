@@ -30,8 +30,16 @@ namespace HangMe
                     hasDidSomething = true;
                     Task.Run(() => api.StartAPI()).Wait();
                     break;
-                } 
-                Console.WriteLine($"Argument {i}: {commandLineArgs[i]}");
+                }
+
+                if (commandLineArgs[i] == "-server")
+                {
+                    server s = new server(7777);
+                    hasDidSomething = true;
+                    Task.Run(() => s.startServer()).Wait();
+                    break;
+                }
+                //Console.WriteLine($"Argument {i}: {commandLineArgs[i]}");
             }
 
             if (hasDidSomething) return;

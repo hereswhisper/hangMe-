@@ -13,7 +13,8 @@ namespace HangMe.Engine.Server.GameState
         private List<string> _guessedLetters = new List<string>(); // Where the player's are gonna guess
         private List<string> _possibleWords = new List<string>(); // Possible words the gamestate can choose
         private int _gameId = -1; // the unique Game identification code. (if the GameId is -1, there's been a issue).
-        private string[] _players = { }; // player names who are in the session
+        public string[] _players = { }; // player names who are in the session
+        public int _playerCount = 0; // Player Count
         public List<string> _correctLetters = new List<string>(); // Letters that are correct
 
         /// <summary>
