@@ -15,5 +15,5 @@ When making new Widgets please follow this guide to keep everything in perfect o
 // Description:
 ```
 <br>
-3. In the showContents method. Make sure that at the beginning please add ```AConsoleUtilities smoothWriter = new AConsoleUtilities();```<br>
-4. In the same method at the end of it add ```return```.
+3. In the showContents method. Make sure that at the beginning please add AConsoleUtilities smoothWriter = new AConsoleUtilities();<br>
+4. In the same method at the end of it add return.
