@@ -5,3 +5,6 @@ C:\Users\whizp\source\repos\HangMe\HangMe\obj\Debug\HangMe.csproj.AssemblyRefere
 C:\Users\whizp\source\repos\HangMe\HangMe\obj\Debug\HangMe.csproj.CoreCompileInputs.cache
 C:\Users\whizp\source\repos\HangMe\HangMe\obj\Debug\HangMe.exe
 C:\Users\whizp\source\repos\HangMe\HangMe\obj\Debug\HangMe.pdb
+C:\Users\whizp\source\repos\HangMe\HangMe\bin\Debug\Newtonsoft.Json.dll
+C:\Users\whizp\source\repos\HangMe\HangMe\bin\Debug\Newtonsoft.Json.xml
+C:\Users\whizp\source\repos\HangMe\HangMe\obj\Debug\HangMe.csproj.CopyComplete

@@ -28,7 +28,7 @@ namespace HangMe.Engine.Client
 
             creator.wipeAllWidgets(true); // wipe all the widgets since we no longer need it.
 
-            await creator.createWidgetAsync("login"); // create ALoginScreen
+            //await creator.createWidgetAsync("login"); // create ALoginScreen (do one day)
         }
     }
 }
