@@ -18,5 +18,15 @@ namespace HangMe.Engine.Common
                 Thread.Sleep(timeToSleep);
             }
         }
+
+        /// <summary>
+        /// Suspends Thread (make sure the TICK is on a different thread)
+        /// </summary>
+        /// <param name="time"></param>
+        public static void Sleep(int time)
+        {
+            Thread.Sleep(time);
+            return; // return to normal execution
+        }
     }
 }

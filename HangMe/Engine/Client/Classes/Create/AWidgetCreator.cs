@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HangMe.Engine.Client.Classes.Widgets;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,13 +14,16 @@ namespace HangMe.Engine.Client.Classes.Create
         /// Creates a Widget onto the canvas
         /// </summary>
         /// <param name="name"></param>
-        public int createWidget(string name)
+        public async Task<int> createWidgetAsync(string name)
         {
+            ADisclaimerScreen _aDisclaimerScreen = new ADisclaimerScreen();
+
             bool createdWidget = false;
             switch (name)
             {
                 case "disclaimer":
-                    Client.Classes.Widgets.ADisclaimerScreen.showContents();
+                    
+                    await _aDisclaimerScreen.showContents();
                     createdWidget = true;
                     break;
             }

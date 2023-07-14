@@ -59,6 +59,7 @@
     <Compile Include="Engine\Server\Enumerations\EHangMatchState.cs" />
     <Compile Include="Engine\Server\GameState\AEngineBaseGameState.cs" />
     <Compile Include="Engine\Server\GameState\ASpectatorGameState.cs" />
+    <Compile Include="Engine\Server\Identifiers\GUIDGenerator.cs" />
     <Compile Include="Public\Build.cs" />
     <Compile Include="Engine\Client\Classes\Create\AWidgetCreator.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\ADisclaimerScreen.cs" />
@@ -72,6 +73,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Engine\API\" />
     <Folder Include="Engine\Client\LocalController\" />
     <Folder Include="Engine\Client\LocalGameState\" />
     <Folder Include="Engine\Server\Classes\" />

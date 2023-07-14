@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HangMe.Engine.Client.Classes.Create
@@ -63,8 +64,10 @@ namespace HangMe.Engine.Client.Classes.Create
             Console.WriteLine(message);
         }
 
-        public static void BottomCenterScreen(string message)
+        public static void BottomCenterScreen(string message, bool smoothWrite = false, int amountToSleep = 300)
         {
+            if (message == null) return; // no message nessecary
+
             int screenWidth = Console.WindowWidth;
             int screenHeight = Console.WindowHeight;
 
@@ -75,7 +78,18 @@ namespace HangMe.Engine.Client.Classes.Create
             int bottomCenterHeight = screenHeight - messageHeight;
 
             Console.SetCursorPosition(centerWidth, bottomCenterHeight);
-            Console.WriteLine(message);
+            
+            if(!smoothWrite)
+            {
+                Console.WriteLine(message);
+                return;
+            }
+
+            for (int i = 0; i < message.Length; i++)
+            {
+                Console.Write(message[i]);
+                Thread.Sleep(amountToSleep);
+            }
         }
 
         public static void BottomLeftScreen(string message)

@@ -19,7 +19,7 @@ namespace HangMe
             // see if there is -server flag on it
 #endif
 
-            client.startClient();
+            client.startClientAsync();
 
 
         }
