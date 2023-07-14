@@ -50,6 +50,7 @@
     <Compile Include="Engine\API\Classes\Routes\RRegisterPage.cs" />
     <Compile Include="Engine\API\Classes\Routes\RTemplate.cs" />
     <Compile Include="Engine\API\Classes\Webserver.cs" />
+    <Compile Include="Engine\Client\Classes\Authority\AAuthority.cs" />
     <Compile Include="Engine\Client\Classes\Connectors\AGSConnector.cs" />
     <Compile Include="Engine\Client\Classes\Connectors\APIConnector.cs" />
     <Compile Include="Engine\Client\Classes\Create\AScreenPositioner.cs" />
