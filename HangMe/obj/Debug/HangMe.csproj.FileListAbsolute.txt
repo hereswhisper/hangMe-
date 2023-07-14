@@ -1,0 +1,7 @@
+C:\Users\whizp\source\repos\HangMe\HangMe\bin\Debug\HangMe.exe.config
+C:\Users\whizp\source\repos\HangMe\HangMe\bin\Debug\HangMe.exe
+C:\Users\whizp\source\repos\HangMe\HangMe\bin\Debug\HangMe.pdb
+C:\Users\whizp\source\repos\HangMe\HangMe\obj\Debug\HangMe.csproj.AssemblyReference.cache
+C:\Users\whizp\source\repos\HangMe\HangMe\obj\Debug\HangMe.csproj.CoreCompileInputs.cache
+C:\Users\whizp\source\repos\HangMe\HangMe\obj\Debug\HangMe.exe
+C:\Users\whizp\source\repos\HangMe\HangMe\obj\Debug\HangMe.pdb
