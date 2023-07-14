@@ -37,6 +37,7 @@ EHangHTTPMethod - 100%<br>
 EHangHTTPContentTypes - 100%<br>
 RMainPage - 100% (aside from HTML)<br>
 RRegisterPage - 100%<br>
+RTemplate - 100%<br>
 ARoute - 5%<br>
 WebserverService - 2%<br>
 ApiEntry - 100%
@@ -48,9 +49,9 @@ if you want to contribute to the hangMe project. Please follow these strict inst
 ## Widgets
 When making new Widgets please follow this guide to keep everything in perfect order<br>
 1. Please use the **ATemplateScreen** as the base EVERY time. This is in "HangMe\Engine\Client\Classes\Widgets\ATemplateScreen".<br>
-2. If you made the widget for it. Please at the top of the file please add the following piece of code<br>
+2. If you made the widget for it. Please at the top of the file please add the following piece of comments<br>
 ```
-// THIS CODE IS MADE FOR hangMe! AND CANNOT BE USED BY ANYTHING ELSE.
+// THIS CODE IS MADE FOR hangMe! BY A CONTRIBUTOR AND CANNOT BE USED BY ANYTHING ELSE
 // Contributor:
 // Date of Code:
 // Description:
@@ -58,3 +59,17 @@ When making new Widgets please follow this guide to keep everything in perfect o
 <br>
 3. In the showContents method. Make sure that at the beginning please add AConsoleUtilities smoothWriter = new AConsoleUtilities();<br>
 4. In the same method at the end of it add return.
+
+## Routes (for API Service)
+If you want to create a new Route for hangMe's API please follow this guide to keep everything in working order<br>
+1. Whenever creating a new Route please use RTemplate as the base which is located at "HangMe\Engine\API\Classes\Routes\RTemplate"<br>
+2. At the beginning of the file add the following comments<br>
+```
+// THIS ROUTE IS MADE FOR hangMe! BY A CONTRIBUTOR AND CANNOT BE USED BY ANYTHING ELSE
+// Contributor:
+// Date Of Code:
+// Description:
+```
+<br>
+3. Follow the Guidelines given out by RTemplate as there is comments explaining every piece of code and what they serve for.
+4. Make sure it has BOTH a return true when the page content was served correctly and return false when it was never served cause it never matched same method or something.
