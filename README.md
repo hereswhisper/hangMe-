@@ -30,6 +30,11 @@ ServerEntry - 0%<br><br>
 **COMMON:**<br>
 AConsoleUtilities - 5%<br>
 AMusicSheets - 2% (Contains all music in the game, later I hope to implement playing of MP3 and OGG files)<br><br>
+**API:**<br>
+EHangHTTPMethod - 100%<br>
+RMainPage - 100% (aside from HTML)<br>
+WebserverService - 2%<br>
+ApiEntry - 100%
 
 
 # Guide for Contributions
