@@ -16,6 +16,8 @@ AHangGameState - 100% (just for holding client version of the server variables)<
 ASpectatorGameState - 100% (just for holding client version of the server variables)<br>
 ADisclaimerScreen - 100%<br>
 AStartMenuScreen - 1%<br>
+AAuthority - 10%<br>
+ALoginScreen - 2%<br>
 ATemplateScreen<br>
 ClientEntry<br><br>
 **SERVER:**<br>
@@ -32,7 +34,10 @@ AConsoleUtilities - 5%<br>
 AMusicSheets - 2% (Contains all music in the game, later I hope to implement playing of MP3 and OGG files)<br><br>
 **API:**<br>
 EHangHTTPMethod - 100%<br>
+EHangHTTPContentTypes - 100%<br>
 RMainPage - 100% (aside from HTML)<br>
+RRegisterPage - 100%<br>
+ARoute - 5%<br>
 WebserverService - 2%<br>
 ApiEntry - 100%
 
