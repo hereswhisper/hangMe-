@@ -4,7 +4,7 @@ hangMe! is a full game written entirely in c# (Client, Gameservers, API, etc) .N
 # Classes Implemented
 This includes Enums and Classes:<br>
 **CLIENT:**<br>
-AGSConnecter - 0%<br>
+AGSConnecter - 40%<br>
 APIConnecter - 0%<br>
 AScreenPositioner - 100%<br>
 AWidgetCreator - 60%<br>
