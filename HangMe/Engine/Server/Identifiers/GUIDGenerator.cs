@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HangMe.Engine.Server.Identifiers
 {
+#if WITH_SERVER_CODE
     internal class GUIDGenerator
     {
         private static Random random = new Random();
@@ -19,4 +20,5 @@ namespace HangMe.Engine.Server.Identifiers
             return uniqueId;
         }
     }
+#endif
 }

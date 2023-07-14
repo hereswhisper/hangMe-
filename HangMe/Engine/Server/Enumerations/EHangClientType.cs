@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HangMe.Engine.Server.Enumerations
 {
+#if WITH_SERVER_CODE
     enum EHangClientType
     {
         NONE, // nothing, shouldn't call this but if it does it will probably crash at some point
@@ -15,4 +16,5 @@ namespace HangMe.Engine.Server.Enumerations
         DEDICATED_SERVER, // You are a dedicated server, you are running the actual game server, you are just running it from a VPS or something.
         MAX // should never call this. But if it does, you are above everyone (like a lord)
     }
+#endif
 }

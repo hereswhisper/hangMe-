@@ -34,10 +34,10 @@ namespace HangMe
                 Console.WriteLine($"Argument {i}: {commandLineArgs[i]}");
             }
 
-            //if (hasDidSomething) return;
+            if (hasDidSomething) return;
 #endif
 
-            //client.startClientAsync();
+            client.startClientAsync();
 
 
         }

@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;WITH_SERVER_CODE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;WITH_SERVER_CODE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
@@ -44,8 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\API\api.cs" />
+    <Compile Include="Engine\API\Classes\Enumerations\EHangHTTPContentTypes.cs" />
     <Compile Include="Engine\API\Classes\Enumerations\EHangHTTPMethod.cs" />
     <Compile Include="Engine\API\Classes\Routes\RMainPage.cs" />
+    <Compile Include="Engine\API\Classes\Routes\RRegisterPage.cs" />
+    <Compile Include="Engine\API\Classes\Routes\RTemplate.cs" />
     <Compile Include="Engine\API\Classes\Webserver.cs" />
     <Compile Include="Engine\Client\Classes\Connectors\AGSConnector.cs" />
     <Compile Include="Engine\Client\Classes\Connectors\APIConnector.cs" />

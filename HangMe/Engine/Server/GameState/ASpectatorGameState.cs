@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HangMe.Engine.Server.GameState
 {
+#if WITH_SERVER_CODE
     /// <summary>
     /// ONLY CALL THIS WHENEVER PLAYER JOINS, DO NOT CALL IT FROM STARTUP.
     /// </summary>
@@ -23,4 +24,5 @@ namespace HangMe.Engine.Server.GameState
             _players.Add(newPlayer); // the new player has been initalized
         }
     }
+#endif
 }

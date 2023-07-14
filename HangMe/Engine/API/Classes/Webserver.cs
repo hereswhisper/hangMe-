@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace HangMe.Engine.API.Classes
 {
+#if WITH_SERVER_CODE
     internal class WebServer
     {
         private readonly HttpListener listener;
@@ -48,11 +49,11 @@ namespace HangMe.Engine.API.Classes
             {
                 Routes.RMainPage.ShowContent(context);
                 return;
-                //responseString = "Welcome to the homepage!";
             }
-            else if (context.Request.HttpMethod == EHangHTTPMethod.GET && context.Request.Url.AbsolutePath == "/api/data")
+            else if (context.Request.HttpMethod == EHangHTTPMethod.GET && context.Request.Url.AbsolutePath == "/register")
             {
-                responseString = "GET Endpoint: This is the data endpoint.";
+                Routes.RRegisterPage.ShowContent(context);
+                return;
             }
             else if (context.Request.HttpMethod == EHangHTTPMethod.POST && context.Request.Url.AbsolutePath == "/api/data")
             {
@@ -61,10 +62,11 @@ namespace HangMe.Engine.API.Classes
 
             byte[] buffer = Encoding.UTF8.GetBytes(responseString);
 
-            context.Response.ContentType = "text/plain";
+            context.Response.ContentType = EHangHTTPContentTypes.PlainText;
             context.Response.ContentLength64 = buffer.Length;
             await context.Response.OutputStream.WriteAsync(buffer, 0, buffer.Length);
             context.Response.Close();
         }
     }
+#endif
 }

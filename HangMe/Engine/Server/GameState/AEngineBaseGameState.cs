@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HangMe.Engine.Server.GameState
 {
+#if WITH_SERVER_CODE
     internal class AEngineBaseGameState
     {
         /// <summary>
@@ -15,4 +16,5 @@ namespace HangMe.Engine.Server.GameState
             
         }
     }
+#endif
 }

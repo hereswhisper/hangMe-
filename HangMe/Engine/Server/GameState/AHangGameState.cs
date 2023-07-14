@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace HangMe.Engine.Server.GameState
 {
+#if WITH_SERVER_CODE
     internal class AHangGameState
     {
         private List<string> _guessedLetters = new List<string>(); // Where the player's are gonna guess
@@ -62,4 +63,5 @@ namespace HangMe.Engine.Server.GameState
             return 0; // success
         }
     }
+#endif
 }

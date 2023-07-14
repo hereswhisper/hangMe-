@@ -11,6 +11,7 @@ using System.Security.Policy;
 
 namespace HangMe.Engine.Server
 {
+#if WITH_SERVER_CODE
     internal class server
     {
         private int _port;
@@ -88,4 +89,5 @@ namespace HangMe.Engine.Server
             }
         }
     }
+#endif
 }

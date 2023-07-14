@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HangMe.Engine.API.Classes.Enumerations
 {
+#if WITH_SERVER_CODE
     public struct EHangHTTPMethod
     {
         public static string GET = "GET";
@@ -13,4 +14,5 @@ namespace HangMe.Engine.API.Classes.Enumerations
         public static string PUT = "PUT";
         public static string DELETE = "DELETE";
     }
+#endif
 }
