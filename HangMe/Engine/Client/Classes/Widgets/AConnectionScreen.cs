@@ -26,10 +26,23 @@ namespace HangMe.Engine.Client.Classes.Widgets
 
             ShowAwaitingGameStateStatus();
 
-            while(!Global.hasRecievedGameState)
+            AGSConnector.SendGameStateRequest(AGSConnector.webSocket); // Send SendGameStateRequest to Server (after this, it should ask client for Ack)
+
+            while (!Global.hasRecievedGameState)
             {
 
             }
+
+            ShowAcknowledgementScreen(); // Acknowledging server so they know I am a legitimate client.
+
+            AGSConnector.SendAcknowledgementRequest(AGSConnector.webSocket); // Send Acknowledgement packet
+            
+            while(!Global.isAcknowledged)
+            {
+
+            }
+
+            ShowDroppingScreen(); // We are all ready for it, dropping Connecting Screen
 
             return;
         }
@@ -44,6 +57,20 @@ namespace HangMe.Engine.Client.Classes.Widgets
         {
             Console.Clear(); // ONLY TIME WHERE THIS IS ALLOWED.
             AScreenPositioner.MiddleCenterScreen("Awaiting GameState...");
+            return true;
+        }
+
+        public static bool ShowAcknowledgementScreen()
+        {
+            Console.Clear(); // ONLY TIME WHERE THIS IS ALLOWED.
+            AScreenPositioner.MiddleCenterScreen("Acknowledging Server...");
+            return true;
+        }
+
+        public static bool ShowDroppingScreen()
+        {
+            Console.Clear(); // ONLY TIME WHERE THIS IS ALLOWED.
+            AScreenPositioner.MiddleCenterScreen("Loading Gameboard...");
             return true;
         }
     }

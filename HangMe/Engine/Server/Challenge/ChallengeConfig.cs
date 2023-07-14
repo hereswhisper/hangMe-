@@ -9,7 +9,7 @@ namespace HangMe.Engine.Server.Challenge
 #if WITH_SERVER_CODE
     internal class ChallengeConfig
     {
-        public static int ACKSize = 134122;
+        public static string ACKSize = "134122";
     }
 #endif
 }

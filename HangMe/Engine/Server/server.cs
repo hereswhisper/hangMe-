@@ -10,6 +10,11 @@ using System.Net.Sockets;
 using System.Security.Policy;
 using HangMe.Engine.Client.Classes.Skeletons;
 using HangMe.Engine.Server.Enumerations;
+using System.Net.Mail;
+using System.Data;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using HangMe.Engine.Server.Challenge;
 
 namespace HangMe.Engine.Server
 {
@@ -86,12 +91,50 @@ namespace HangMe.Engine.Server
                             Console.WriteLine("[hangMe Websocket Server INFO]: Player has connected, sending GameState");
                             _gameState._playerCount = _gameState._playerCount + 1; // notify of user logon
                         }
+                        else if (receivedMessage == EHangServerFunctions.ClientRequestGameState)
+                        {
+                            var gameStateData = new
+                            {
+                                guessedletters = _gameState._guessedLetters,
+                                gameId = _gameState._gameId,
+                                players = _gameState._players,
+                                playerCount = _gameState._playerCount,
+                                correctLetters = _gameState._correctLetters,
+                                nextCommand = EHangServerFunctions.ClientAcknowledgment
+                            };
+
+                            string json = JsonConvert.SerializeObject(gameStateData);
+                            byte[] messageBytes = Encoding.UTF8.GetBytes(json);
+                            await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                            Console.WriteLine("[hangMe Server INFO]: Sent GameState to Client. Awaiting Tick Thread...");
+                        } else if (receivedMessage.StartsWith("{") ||  receivedMessage.StartsWith("[")) {
+                            // assume it's a json
+
+                            var json = JObject.Parse(receivedMessage);
+
+                            string command = json["Command"]?.ToString();
+
+                            if(command == EHangServerFunctions.ClientAcknowledgment)
+                            {
+                                string size = json["Size"]?.ToObject<string>();
+
+                                if(size == ChallengeConfig.ACKSize)
+                                {
+                                    byte[] responseBytes = System.Text.Encoding.UTF8.GetBytes("OK");
+                                    await webSocket.SendAsync(new ArraySegment<byte>(responseBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                                } else
+                                {
+                                    byte[] responseBytes = System.Text.Encoding.UTF8.GetBytes("NO");
+                                    await webSocket.SendAsync(new ArraySegment<byte>(responseBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                                }
+                            }
+                        }
                     }
 
                     // Send a response back to the client
-                    string responseMessage = "Server received: " + receivedMessage;
-                    byte[] responseBytes = System.Text.Encoding.UTF8.GetBytes(responseMessage);
-                    await webSocket.SendAsync(new ArraySegment<byte>(responseBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                    //string responseMessage = "Server received: " + receivedMessage;
+                    //byte[] responseBytes = System.Text.Encoding.UTF8.GetBytes(responseMessage);
+                    //await webSocket.SendAsync(new ArraySegment<byte>(responseBytes), WebSocketMessageType.Text, true, CancellationToken.None);
                 }
                 else if (result.MessageType == WebSocketMessageType.Close)
                 {

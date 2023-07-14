@@ -10,6 +10,7 @@ namespace HangMe.Engine.Client.Classes
     {
         public static bool isConnected = false; // change this when it is
         public static bool hasRecievedGameState = false; // waiting for GameState
+        public static bool isAcknowledged = false; // Acknowledgement is IMPORTANT for security.
         public static float lastTick = 0f;
     }
 }

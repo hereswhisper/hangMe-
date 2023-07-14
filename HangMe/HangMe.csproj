@@ -68,6 +68,7 @@
     <Compile Include="Engine\Client\Classes\Skeletons\ASpectatorGameState.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\AConnectionScreen.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\AConnectIPScreen.cs" />
+    <Compile Include="Engine\Client\Classes\Widgets\AGameBoard.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\ALoginScreen.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\AStartMenuScreen.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\ATemplateScreen.cs" />
