@@ -20,6 +20,16 @@ namespace HangMe.Engine.Common
         }
 
         /// <summary>
+        /// Request User Input (Keyboard)
+        /// </summary>
+        /// <returns></returns>
+        public static string UserInput()
+        {
+            var e = Console.ReadLine();
+            return e;
+        }
+
+        /// <summary>
         /// Suspends Thread (make sure the TICK is on a different thread)
         /// </summary>
         /// <param name="time"></param>

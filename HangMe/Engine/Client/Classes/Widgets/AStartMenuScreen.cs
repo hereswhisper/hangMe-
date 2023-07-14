@@ -12,9 +12,11 @@ namespace HangMe.Engine.Client.Classes.Widgets
     {
         public async Task showContents()
         {
-            AConsoleUtilities smoothWriter = ;
+            AConsoleUtilities smoothWriter = new AConsoleUtilities();
 
             AScreenPositioner.TopCenterScreen("hangMe");
+
+            AScreenPositioner.MiddleCenterScreen("1. Connect to Session\n2. Quit Game");
 
             return; // make sure all Widgets have return at the ends 
         }

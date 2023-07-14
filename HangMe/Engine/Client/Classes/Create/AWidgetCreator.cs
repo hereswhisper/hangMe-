@@ -17,6 +17,8 @@ namespace HangMe.Engine.Client.Classes.Create
         public async Task<int> createWidgetAsync(string name)
         {
             ADisclaimerScreen _aDisclaimerScreen = new ADisclaimerScreen();
+            AStartMenuScreen _aStartMenuScreen = new AStartMenuScreen();
+            ALoginScreen _aLoginScreen = new ALoginScreen();
 
             bool createdWidget = false;
             switch (name)
@@ -26,9 +28,17 @@ namespace HangMe.Engine.Client.Classes.Create
                     await _aDisclaimerScreen.showContents();
                     createdWidget = true;
                     break;
+                case "startmenu":
+                    await _aStartMenuScreen.showContents();
+                    createdWidget = true;
+                    break;
+                case "login":
+                    await _aLoginScreen.showContents();
+                    createdWidget = true;
+                    break;
             }
 
-            if (!createdWidget) return 1; // failure
+            if (!createdWidget) return 1; // failure (not good btw)
 
             return 0; // success
         }
