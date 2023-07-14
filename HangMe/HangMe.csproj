@@ -43,6 +43,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\API\api.cs" />
+    <Compile Include="Engine\API\Classes\Enumerations\EHangHTTPMethod.cs" />
+    <Compile Include="Engine\API\Classes\Routes\RMainPage.cs" />
+    <Compile Include="Engine\API\Classes\Webserver.cs" />
     <Compile Include="Engine\Client\Classes\Connectors\AGSConnector.cs" />
     <Compile Include="Engine\Client\Classes\Connectors\APIConnector.cs" />
     <Compile Include="Engine\Client\Classes\Create\AScreenPositioner.cs" />
@@ -76,7 +80,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Engine\API\" />
     <Folder Include="Engine\Client\LocalController\" />
     <Folder Include="Engine\Client\LocalGameState\" />
     <Folder Include="Engine\Server\Classes\" />
