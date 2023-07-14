@@ -3,7 +3,7 @@ hangMe! is a full game written entirely in c# (Client, Gameservers, API, etc) .N
 
 # Classes Implemented
 This includes Enums and Classes:<br>
-**CLIENT:**
+**CLIENT:**<br>
 AGSConnecter - 0%<br>
 APIConnecter - 0%<br>
 AScreenPositioner - 100%<br>
@@ -18,7 +18,7 @@ ADisclaimerScreen - 100%<br>
 AStartMenuScreen - 1%<br>
 ATemplateScreen<br>
 ClientEntry<br><br>
-**SERVER:**
+**SERVER:**<br>
 ChallengeConfig - 2% (contains ACK sizes, etc)<br>
 EHangClientType - 100%<br>
 EHangMatchState - 100%<br>
@@ -27,7 +27,7 @@ AHangGameState - 10%<br>
 ASpectatorGameState - 2%<br>
 GUIDGenerator - 100%<br>
 ServerEntry - 0%<br><br>
-**COMMON:**
+**COMMON:**<br>
 AConsoleUtilities - 5%<br>
 AMusicSheets - 2% (Contains all music in the game, later I hope to implement playing of MP3 and OGG files)<br><br>
 
