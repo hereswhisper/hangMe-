@@ -52,6 +52,8 @@
     <Compile Include="Engine\Client\Classes\Replicator\AReplicator.cs" />
     <Compile Include="Engine\Client\Classes\Skeletons\AHangGameState.cs" />
     <Compile Include="Engine\Client\Classes\Skeletons\ASpectatorGameState.cs" />
+    <Compile Include="Engine\Client\Classes\Widgets\AStartMenuScreen.cs" />
+    <Compile Include="Engine\Client\Classes\Widgets\ATemplateScreen.cs" />
     <Compile Include="Engine\Common\AConsoleUtilities.cs" />
     <Compile Include="Engine\Common\AMusicSheets.cs" />
     <Compile Include="Engine\Server\Challenge\ChallengeConfig.cs" />
