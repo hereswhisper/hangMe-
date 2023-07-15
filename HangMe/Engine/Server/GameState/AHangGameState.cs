@@ -15,7 +15,7 @@ namespace HangMe.Engine.Server.GameState
         public int _gameId = -1; // the unique Game identification code. (if the GameId is -1, there's been a issue).
         public string[] _players = { }; // player names who are in the session
         public int _playerCount = 0; // Player Count
-        public static string _currentWord = ""; // the Current word
+        public string _currentWord = ""; // the Current word
 
         public List<string> _correctLetters = new List<string>(); // Letters that are correct
 
@@ -63,7 +63,7 @@ namespace HangMe.Engine.Server.GameState
         /// <summary>
         /// Randomly selects a word from _possibleWords
         /// </summary>
-        public static void selectWord()
+        public void selectWord()
         {
             Random random = new Random();
             string randomWord = _possibleWords[random.Next(0, _possibleWords.Count)];

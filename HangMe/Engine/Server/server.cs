@@ -55,6 +55,9 @@ namespace HangMe.Engine.Server
 
             _cancellationTokenSource = new CancellationTokenSource();
 
+            // Start a separate task for handling user input
+            Task userInputTask = Task.Run(ProcessUserInput);
+
             while (!_cancellationTokenSource.Token.IsCancellationRequested)
             {
                 // Await incoming HTTP requests
@@ -75,6 +78,31 @@ namespace HangMe.Engine.Server
             }
 
             _httpListener.Close();
+            // Wait for the userInputTask to complete before exiting the StartServer method
+            await userInputTask;
+        }
+
+        private async Task ProcessUserInput()
+        {
+            while (true)
+            {
+                Console.Write("[whisper@hangme]> ");
+                string input = Console.ReadLine();
+
+                if (input == "exit")
+                {
+                    // Cancel the server loop by triggering cancellation
+                    _cancellationTokenSource.Cancel();
+                    break;
+                } else if (input == "startgame")
+                {
+                    _gameState.selectWord(); // selects a word
+                }
+
+                // Process the command
+                //Console.WriteLine("Command received: " + input);
+                // Add your command processing logic here
+            }
         }
 
         private async void HandleWebSocketConnection(WebSocket webSocket)
@@ -107,6 +135,7 @@ namespace HangMe.Engine.Server
                                 players = _gameState._players,
                                 playerCount = _gameState._playerCount,
                                 correctLetters = _gameState._correctLetters,
+                                selectedWord = _gameState._currentWord,
                                 nextCommand = EHangServerFunctions.ClientAcknowledgment
                             };
 
@@ -144,6 +173,7 @@ namespace HangMe.Engine.Server
                                 players = _gameState._players,
                                 playerCount = _gameState._playerCount,
                                 correctLetters = _gameState._correctLetters,
+                                selectedWord = _gameState._currentWord,
                                 Command = "ClientRequestNewGameState"
                             };
 

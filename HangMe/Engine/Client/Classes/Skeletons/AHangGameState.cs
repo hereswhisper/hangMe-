@@ -14,6 +14,7 @@ namespace HangMe.Engine.Client.Classes.Skeletons
         public string[] _players = { }; // Client only needs this for putting their names on the screen
         public int _playerCount = 0; // Player Count
         public List<string> _correctLetters = new List<string>();
+        public string _selectedWord = ""; // Word that is currently selected.
 
         // ... Rest of the GameState is server sided (this is just what we need for client)
     }

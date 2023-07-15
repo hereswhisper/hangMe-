@@ -199,6 +199,7 @@ namespace HangMe.Engine.Client.Classes.Connectors
                             JArray playersArray = json["players"] as JArray;
                             int playerCount = json["playerCount"]?.ToObject<int>() ?? 0;
                             JArray correctLettersArray = json["correctLetters"] as JArray;
+                            string selectedWord = json["selectedWord"]?.ToString();
                             string nextCommand = json["nextCommand"]?.ToString();
 
                             List<string> guessedLetters = guessedLettersArray?.ToObject<List<string>>();
@@ -210,6 +211,7 @@ namespace HangMe.Engine.Client.Classes.Connectors
                             _localGameState._guessedletters = guessedLetters;
                             _localGameState._playerCount = playerCount;
                             _localGameState._correctLetters = correctLetters;
+                            _localGameState._selectedWord = selectedWord;
                         }
                     }
                 }
