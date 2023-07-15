@@ -79,6 +79,7 @@
     <Compile Include="Engine\Server\Challenge\ChallengeConfig.cs" />
     <Compile Include="Engine\Server\Enumerations\EHangClientType.cs" />
     <Compile Include="Engine\Server\Enumerations\EHangGameVisibility.cs" />
+    <Compile Include="Engine\Server\Enumerations\EHangKickReason.cs" />
     <Compile Include="Engine\Server\Enumerations\EHangMatchState.cs" />
     <Compile Include="Engine\Server\Enumerations\EHangServerFunctions.cs" />
     <Compile Include="Engine\Server\GameState\AEngineBaseGameState.cs" />

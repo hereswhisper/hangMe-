@@ -128,7 +128,7 @@ namespace HangMe.Engine.Server
                         var data = new
                         {
                             Command = "ClientForceLeave",
-                            Reason = "You have been kicked because the server has kicked everyone. (Game restarting..?)"
+                            Reason = EHangKickReason.KICKEDALL
                         };
 
                         string sjson = JsonConvert.SerializeObject(data);
