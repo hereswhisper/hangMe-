@@ -66,6 +66,7 @@
     <Compile Include="Engine\Client\Classes\Replicator\AReplicator.cs" />
     <Compile Include="Engine\Client\Classes\Skeletons\AHangGameState.cs" />
     <Compile Include="Engine\Client\Classes\Skeletons\ASpectatorGameState.cs" />
+    <Compile Include="Engine\Client\Classes\Skeletons\PHangPlayer.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\AConnectionScreen.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\AConnectIPScreen.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\AGameBoard.cs" />
@@ -81,6 +82,8 @@
     <Compile Include="Engine\Server\GameState\AEngineBaseGameState.cs" />
     <Compile Include="Engine\Server\GameState\ASpectatorGameState.cs" />
     <Compile Include="Engine\Server\Identifiers\GUIDGenerator.cs" />
+    <Compile Include="Engine\Server\Identifiers\UserIdGeneration.cs" />
+    <Compile Include="Engine\Server\PlayerState\PHangPlayer.cs" />
     <Compile Include="Public\Build.cs" />
     <Compile Include="Engine\Client\Classes\Create\AWidgetCreator.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\ADisclaimerScreen.cs" />
@@ -99,7 +102,6 @@
     <Folder Include="Engine\Client\LocalGameState\" />
     <Folder Include="Engine\Server\Classes\" />
     <Folder Include="Engine\Server\Controllers\" />
-    <Folder Include="Engine\Server\PlayerState\" />
     <Folder Include="Engine\Server\Replicator\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

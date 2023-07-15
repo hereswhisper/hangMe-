@@ -25,13 +25,22 @@ namespace HangMe.Engine.Client.Classes.Widgets
                 // ... Nothing
             }
 
+            ShowRegisteringStatus();
+
+            AGSConnector.SendRegisterUserRequest(AGSConnector.webSocket); // wowie
+
+            while (!Global.hasRegistered)
+            {
+                // ... At this point the server would be setting shit up
+            }
+
             ShowAwaitingGameStateStatus();
 
             AGSConnector.SendGameStateRequest(AGSConnector.webSocket); // Send SendGameStateRequest to Server (after this, it should ask client for Ack)
 
             while (!Global.hasRecievedGameState)
             {
-
+                // ... At this point the server will be sending the server's copy of the GameState over to the user to replicate their variables
             }
 
             ShowAcknowledgementScreen(); // Acknowledging server so they know I am a legitimate client.
@@ -40,7 +49,7 @@ namespace HangMe.Engine.Client.Classes.Widgets
             
             while(!Global.isAcknowledged)
             {
-
+                // ... At this point the client needs to authenticate to the server that yes it's a authorized hangMe Client
             }
 
             ShowDroppingScreen(); // We are all ready for it, dropping Connecting Screen
@@ -62,6 +71,12 @@ namespace HangMe.Engine.Client.Classes.Widgets
         public static bool ShowConnectingStatus()
         {
             AScreenPositioner.MiddleCenterScreen("Connecting...");
+            return true;
+        }
+
+        public static bool ShowRegisteringStatus()
+        {
+            AScreenPositioner.MiddleCenterScreen("Registering Player to Server...");
             return true;
         }
 

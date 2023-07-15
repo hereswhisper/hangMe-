@@ -33,11 +33,30 @@ namespace HangMe.Engine.Client.Classes.Widgets
                 AScreenPositioner.MiddleCenterScreen(getWord()); // gonna need a function for this
                 AScreenPositioner.BottomLeftScreen("Guessed letters: ");
                 AScreenPositioner.BottomRightScreen("Player Count: " + AGSConnector._localGameState._playerCount);
+                if(AGSConnector._localPlayer.importantAnnouncement != "")
+                {
+                    AScreenPositioner.BottomCenterScreen(AGSConnector._localPlayer.importantAnnouncement);
+                }
+                
 
             } else
             {
                 return; // L bozo
             }
+        }
+
+        public static void Guess()
+        {
+            Console.Write("Guess a LETTER: ");
+            string letter = Console.ReadLine();
+            AGSConnector.SendGuessRequest(AGSConnector.webSocket, letter);
+        }
+
+        public static async void ForceRefreshGameboard()
+        {
+            AWidgetCreator a = new AWidgetCreator();
+            a.wipeAllWidgets(true);
+            await a.createWidgetAsync("gameboard");
         }
 
         public static string getWord()

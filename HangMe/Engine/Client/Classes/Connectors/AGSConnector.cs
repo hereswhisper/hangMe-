@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using HangMe.Engine.Client.Classes.Widgets;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace HangMe.Engine.Client.Classes.Connectors
 {
@@ -13,6 +15,7 @@ namespace HangMe.Engine.Client.Classes.Connectors
     {
         public static ClientWebSocket webSocket = new ClientWebSocket();
         public static Client.Classes.Skeletons.AHangGameState _localGameState = new Client.Classes.Skeletons.AHangGameState();
+        public static Client.Classes.Skeletons.PHangPlayer _localPlayer = new Skeletons.PHangPlayer();
         public static async void connectToGS(string host)
         {
             string websocketHost = "ws://" + host + "/";
@@ -93,12 +96,39 @@ namespace HangMe.Engine.Client.Classes.Connectors
             await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
         }
 
+        // ClientRegisterPlayer
+        public static async void SendRegisterUserRequest(ClientWebSocket webSocket)
+        {
+            byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes("ClientRegisterPlayer");
+            await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+            return;
+        }
+
         public static async void SendAcknowledgementRequest(ClientWebSocket webSocket)
         {
             var data = new
             {
                 Command = "ClientAcknowledgment",
                 Size = "134122"
+            };
+
+            string json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            byte[] messageBytes = Encoding.UTF8.GetBytes(json);
+
+            await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// wowie
+        /// </summary>
+        /// <param name="webSocket"></param>
+        public static async void SendGuessRequest(ClientWebSocket webSocket, string letter)
+        {
+            var data = new
+            {
+                Command = "ClientGuess",
+                UserId = _localPlayer.PlayerId,
+                Size = letter
             };
 
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
@@ -143,17 +173,17 @@ namespace HangMe.Engine.Client.Classes.Connectors
                             // Extract values from the JSON object
                             JArray guessedLettersArray = json["guessedletters"] as JArray;
                             int gameId = json["gameId"]?.ToObject<int>() ?? -1;
-                            JArray playersArray = json["players"] as JArray;
+                            //JArray playersArray = json["players"] as JArray;
                             int playerCount = json["playerCount"]?.ToObject<int>() ?? 0;
                             JArray correctLettersArray = json["correctLetters"] as JArray;
                             string nextCommand = json["nextCommand"]?.ToString();
 
                             List<string> guessedLetters = guessedLettersArray?.ToObject<List<string>>();
                             List<string> correctLetters = correctLettersArray?.ToObject<List<string>>();
-                            string[] PlayersArrayClean = playersArray?.ToObject<string[]>();
+                            //string[] PlayersArrayClean = playersArray?.ToObject<string[]>();
 
                             _localGameState._gameId = gameId;
-                            _localGameState._players = PlayersArrayClean;
+                            //_localGameState._players = PlayersArrayClean;
                             _localGameState._guessedletters = guessedLetters;
                             _localGameState._playerCount = playerCount;
                             _localGameState._correctLetters = correctLetters;
@@ -196,7 +226,7 @@ namespace HangMe.Engine.Client.Classes.Connectors
                         {
                             JArray guessedLettersArray = json["guessedletters"] as JArray;
                             int gameId = json["gameId"]?.ToObject<int>() ?? -1;
-                            JArray playersArray = json["players"] as JArray;
+                            //JArray playersArray = json["players"] as JArray;
                             int playerCount = json["playerCount"]?.ToObject<int>() ?? 0;
                             JArray correctLettersArray = json["correctLetters"] as JArray;
                             string selectedWord = json["selectedWord"]?.ToString();
@@ -204,14 +234,43 @@ namespace HangMe.Engine.Client.Classes.Connectors
 
                             List<string> guessedLetters = guessedLettersArray?.ToObject<List<string>>();
                             List<string> correctLetters = correctLettersArray?.ToObject<List<string>>();
-                            string[] PlayersArrayClean = playersArray?.ToObject<string[]>();
+                            //string[] PlayersArrayClean = playersArray?.ToObject<string[]>();
 
                             _localGameState._gameId = gameId;
-                            _localGameState._players = PlayersArrayClean;
+                            //_localGameState._players = PlayersArrayClean;
                             _localGameState._guessedletters = guessedLetters;
                             _localGameState._playerCount = playerCount;
                             _localGameState._correctLetters = correctLetters;
                             _localGameState._selectedWord = selectedWord;
+                        }
+
+                        if(command == "ServerRegisterInfo")
+                        {
+                            Console.Beep();
+                            string username = json["Name"]?.ToString();
+                            string id = json["UserId"]?.ToString();
+
+                            Console.WriteLine(id);
+                            Thread.Sleep(5000);
+
+                            _localPlayer.name = username;
+                            _localPlayer.PlayerId = id;
+                            Global.hasRegistered = true; // User has registered
+                        }
+
+                        if(command == "ServerRotateTurns")
+                        {
+                            string id = json["UserId"]?.ToString();
+                            Console.WriteLine("DEBUG: " + id);
+                            Console.WriteLine("Your Id DEBUG: " + _localPlayer.PlayerId);
+
+                            if (_localPlayer.PlayerId == id)
+                            {
+                                _localPlayer.myTurn = true;
+                                _localPlayer.importantAnnouncement = "it's " + id + " turn!";
+                                AGameBoard.ForceRefreshGameboard(); // force refresh game board so it can have the new turn
+                                AGameBoard.Guess(); // Make user guess
+                            }
                         }
                     }
                 }

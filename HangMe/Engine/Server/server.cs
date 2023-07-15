@@ -27,6 +27,7 @@ namespace HangMe.Engine.Server
         private bool _isDedicated;
         private HttpListener _httpListener;
         private CancellationTokenSource _cancellationTokenSource;
+        private bool _RotateTurns = false;
         public static List<string> words = new List<string>
 {
     "apple",
@@ -97,6 +98,8 @@ namespace HangMe.Engine.Server
                 } else if (input == "startgame")
                 {
                     _gameState.selectWord(); // selects a word
+                    _gameState.RotateTurns(); // Rotate turns
+                    _RotateTurns = true; // time to rotate
                 }
 
                 // Process the command
@@ -112,6 +115,19 @@ namespace HangMe.Engine.Server
             while (webSocket.State == WebSocketState.Open)
             {
                 WebSocketReceiveResult result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+                if(_RotateTurns)
+                {
+                    var data = new
+                    {
+                        Command = "ServerRotateTurns",
+                        UserId = _gameState._players[_gameState._lastPlayerTurn].userid
+                    };
+
+                    string json = JsonConvert.SerializeObject(data);
+                    byte[] messageBytes = Encoding.UTF8.GetBytes(json);
+                    await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                }
 
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
@@ -132,7 +148,7 @@ namespace HangMe.Engine.Server
                             {
                                 guessedletters = _gameState._guessedLetters,
                                 gameId = _gameState._gameId,
-                                players = _gameState._players,
+                                //players = _gameState._players,
                                 playerCount = _gameState._playerCount,
                                 correctLetters = _gameState._correctLetters,
                                 selectedWord = _gameState._currentWord,
@@ -143,7 +159,26 @@ namespace HangMe.Engine.Server
                             byte[] messageBytes = Encoding.UTF8.GetBytes(json);
                             await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
                             Console.WriteLine("[hangMe Server INFO]: Sent GameState to Client");
-                        } else if (receivedMessage.StartsWith("{") ||  receivedMessage.StartsWith("[")) {
+                        }
+                        else if (receivedMessage == EHangServerFunctions.ClientRegister)
+                        {
+                            Server.PlayerState.PHangPlayer _newPlayer = new Server.PlayerState.PHangPlayer("wow", Identifiers.UserIdGeneration.GenerateUserId());
+                            _gameState._players.Add(_newPlayer); // add new Player into mix.
+
+                            var newPlayerInfo = new
+                            {
+                                Name = _newPlayer.name,
+                                UserId = _newPlayer.userid,
+                                Command = "ServerRegisterInfo"
+                            };
+
+                            string json = JsonConvert.SerializeObject(newPlayerInfo);
+                            byte[] messageBytes = Encoding.UTF8.GetBytes(json);
+                            await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+
+                            Console.WriteLine("[hangMe Server INFO]: Registered client as new player under id: " + _newPlayer.userid);
+                        }
+                        else if (receivedMessage.StartsWith("{") ||  receivedMessage.StartsWith("[")) {
                             // assume it's a json
 
                             var json = JObject.Parse(receivedMessage);
@@ -170,7 +205,7 @@ namespace HangMe.Engine.Server
                             {
                                 guessedletters = _gameState._guessedLetters,
                                 gameId = _gameState._gameId,
-                                players = _gameState._players,
+                                //players = _gameState._players,
                                 playerCount = _gameState._playerCount,
                                 correctLetters = _gameState._correctLetters,
                                 selectedWord = _gameState._currentWord,
@@ -180,7 +215,7 @@ namespace HangMe.Engine.Server
                             string json = JsonConvert.SerializeObject(gameStateData);
                             byte[] messageBytes = Encoding.UTF8.GetBytes(json);
                             await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
-                        }
+                        } 
                     }
 
                     // Send a response back to the client

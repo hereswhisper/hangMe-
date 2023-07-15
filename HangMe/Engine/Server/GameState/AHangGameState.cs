@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +13,11 @@ namespace HangMe.Engine.Server.GameState
     {
         public List<string> _guessedLetters = new List<string>(); // Where the player's are gonna guess
         public static List<string> _possibleWords = new List<string>(); // Possible words the gamestate can choose
-        public int _gameId = -1; // the unique Game identification code. (if the GameId is -1, there's been a issue).
-        public string[] _players = { }; // player names who are in the session
+        public int _gameId = -1; // the unique Game identification code. (if the GameId is -1, there's been a issue and remember THIS IS THE CURRENT PLAYERS TURN).
         public int _playerCount = 0; // Player Count
         public string _currentWord = ""; // the Current word
+        public int _lastPlayerTurn = -1; // The last player's turn (not needed for client, only server)
+        public List<Server.PlayerState.PHangPlayer> _players = new List<Server.PlayerState.PHangPlayer>(); // Players currently in session
 
         public List<string> _correctLetters = new List<string>(); // Letters that are correct
 
@@ -58,6 +60,25 @@ namespace HangMe.Engine.Server.GameState
             _guessedLetters.Add(letter);
             Console.WriteLine("[HangGameState INFO]: Successfully added " + letter + "to GameState!");
             return 0; // completed and ready for next tick
+        }
+
+        /// <summary>
+        /// Rotate Turns
+        /// </summary>
+        public int RotateTurns()
+        {
+            int tempIdx = _lastPlayerTurn + 1;
+
+            if (tempIdx >= _players.Count)
+            {
+                _lastPlayerTurn = 0;
+                return _lastPlayerTurn;
+            }
+            else
+            {
+                _lastPlayerTurn = _lastPlayerTurn + 1;
+                return _lastPlayerTurn;
+            }
         }
 
         /// <summary>

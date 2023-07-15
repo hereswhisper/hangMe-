@@ -13,5 +13,6 @@ namespace HangMe.Engine.Server.Enumerations
         public static string ClientRequestGameState = "ClientRequestGameState";
         public static string ClientRequestNewGameState = "ClientRequestNewGameState";
         public static string ClientAcknowledgment = "ClientAcknowledgment";
+        public static string ClientRegister = "ClientRegisterPlayer";
     }
 }
