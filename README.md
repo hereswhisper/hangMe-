@@ -42,9 +42,6 @@ ARoute - 5%<br>
 WebserverService - 2%<br>
 ApiEntry - 100%
 
-# Skies likes skidding
-im skidding this rm
-
 # Guide for Contributions
 if you want to contribute to the hangMe project. Please follow these strict instructions that I have set out in place so it's clean for me.
 
