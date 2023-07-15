@@ -96,6 +96,13 @@ namespace HangMe.Engine.Client.Classes.Connectors
             await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
         }
 
+        // ClientWhoPlayerTurn
+        public static async void SendGetPlayerTurnRequest(ClientWebSocket webSocket)
+        {
+            byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes("ClientWhoPlayerTurn");
+            await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+        }
+
         // ClientRegisterPlayer
         public static async void SendRegisterUserRequest(ClientWebSocket webSocket)
         {
@@ -164,6 +171,7 @@ namespace HangMe.Engine.Client.Classes.Connectors
                     string receivedMessage = System.Text.Encoding.UTF8.GetString(receiveBuffer, 0, result.Count);
                     //Console.WriteLine("Received: " + receivedMessage);
 
+                    
                     if (Global.isConnected == true && Global.hasRecievedGameState == false)
                     {
                         try
@@ -216,13 +224,46 @@ namespace HangMe.Engine.Client.Classes.Connectors
                         await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
                         Console.Clear();
                         Console.WriteLine("Disconnected: Unauthorized client detected. Please install the latest update on our Discord.");
-                    } else if (receivedMessage.StartsWith("{") ||  receivedMessage.StartsWith("[")) {
+                    }
+                    else if (receivedMessage.Contains("ServerRegisterInfo"))
+                    {
+                        var json = JObject.Parse(receivedMessage);
+                        Console.Beep(); // notify that it's registered
+                        //Console.WriteLine("Alive!");
+                        //string username = json["Name"]?.ToString();
+                        string id = json["UserId"]?.ToString();
+
+                        //Console.WriteLine(id);
+                        Thread.Sleep(2000);
+
+                        //_localPlayer.name = username;
+                        _localPlayer.PlayerId = id;
+                        Global.hasRegistered = true; // User has registered
+                    }
+                    else if (receivedMessage.StartsWith("{") ||  receivedMessage.StartsWith("[")) {
                         // ASSUME IT'S A JSON
                         var json = JObject.Parse(receivedMessage);
 
                         string command = json["Command"]?.ToString();
 
-                        if(command == "ClientRequestNewGameState")
+                        //Console.WriteLine("Command: " + command);
+
+                        if (command == "ServerRegisterInfo")
+                        {
+                            Console.Beep();
+                            //Console.WriteLine("Alive!");
+                            //string username = json["Name"]?.ToString();
+                            string id = json["UserId"]?.ToString();
+
+                            //Console.WriteLine(id);
+                            Thread.Sleep(2000);
+
+                            //_localPlayer.name = username;
+                            _localPlayer.PlayerId = id;
+                            Global.hasRegistered = true; // User has registered
+                        }
+
+                        if (command == "ClientRequestNewGameState")
                         {
                             JArray guessedLettersArray = json["guessedletters"] as JArray;
                             int gameId = json["gameId"]?.ToObject<int>() ?? -1;
@@ -244,22 +285,27 @@ namespace HangMe.Engine.Client.Classes.Connectors
                             _localGameState._selectedWord = selectedWord;
                         }
 
-                        if(command == "ServerRegisterInfo")
+                        if(command == "ClientWhoPlayerTurn")
                         {
-                            Console.Beep();
-                            string username = json["Name"]?.ToString();
-                            string id = json["UserId"]?.ToString();
+                            string userid = json["UserId"]?.ToString();
 
-                            Console.WriteLine(id);
-                            Thread.Sleep(5000);
+                            if(AGSConnector._localPlayer.PlayerId == userid)
+                            {
+                                AGSConnector._localPlayer.myTurn = true;
+                                AGameBoard.ForceRefreshGameboard(); // force refresh board
+                            }
+                        }
 
-                            _localPlayer.name = username;
-                            _localPlayer.PlayerId = id;
-                            Global.hasRegistered = true; // User has registered
+                        // most simple part of the code ever
+                        if(command == "ServerEndTurn")
+                        {
+                            AGameBoard.ForceRefreshGameboard(); // force gameboard refresh.
                         }
 
                         if(command == "ServerRotateTurns")
                         {
+                            Console.Beep();
+                            Console.WriteLine("DEBUG");
                             string id = json["UserId"]?.ToString();
                             Console.WriteLine("DEBUG: " + id);
                             Console.WriteLine("Your Id DEBUG: " + _localPlayer.PlayerId);
@@ -268,8 +314,15 @@ namespace HangMe.Engine.Client.Classes.Connectors
                             {
                                 _localPlayer.myTurn = true;
                                 _localPlayer.importantAnnouncement = "it's " + id + " turn!";
+                                _localGameState._turnPlayerId = id;
                                 AGameBoard.ForceRefreshGameboard(); // force refresh game board so it can have the new turn
-                                AGameBoard.Guess(); // Make user guess
+                                //AGameBoard.Guess(); // Make user guess
+                            } else
+                            {
+                                _localPlayer.myTurn = false;
+                                _localGameState._turnPlayerId = id;
+                                _localPlayer.importantAnnouncement = "it's " + id + " turn!";
+                                AGameBoard.ForceRefreshGameboard(); // force refresh game board so it can have the new turn
                             }
                         }
                     }

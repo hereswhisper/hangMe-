@@ -25,15 +25,6 @@ namespace HangMe.Engine.Client.Classes.Widgets
                 // ... Nothing
             }
 
-            ShowRegisteringStatus();
-
-            AGSConnector.SendRegisterUserRequest(AGSConnector.webSocket); // wowie
-
-            while (!Global.hasRegistered)
-            {
-                // ... At this point the server would be setting shit up
-            }
-
             ShowAwaitingGameStateStatus();
 
             AGSConnector.SendGameStateRequest(AGSConnector.webSocket); // Send SendGameStateRequest to Server (after this, it should ask client for Ack)
@@ -41,6 +32,15 @@ namespace HangMe.Engine.Client.Classes.Widgets
             while (!Global.hasRecievedGameState)
             {
                 // ... At this point the server will be sending the server's copy of the GameState over to the user to replicate their variables
+            }
+
+            ShowRegisteringStatus();
+
+            AGSConnector.SendRegisterUserRequest(AGSConnector.webSocket); // wowie
+
+            while (!Global.hasRegistered)
+            {
+                // ... At this point the server would be setting shit up
             }
 
             ShowAcknowledgementScreen(); // Acknowledging server so they know I am a legitimate client.

@@ -18,6 +18,7 @@ namespace HangMe.Engine.Server.GameState
         public string _currentWord = ""; // the Current word
         public int _lastPlayerTurn = -1; // The last player's turn (not needed for client, only server)
         public List<Server.PlayerState.PHangPlayer> _players = new List<Server.PlayerState.PHangPlayer>(); // Players currently in session
+        public bool _gameStarted = false; // if the Game has started
 
         public List<string> _correctLetters = new List<string>(); // Letters that are correct
 
@@ -69,7 +70,7 @@ namespace HangMe.Engine.Server.GameState
         {
             int tempIdx = _lastPlayerTurn + 1;
 
-            if (tempIdx >= _players.Count)
+            if (tempIdx > _players.Count)
             {
                 _lastPlayerTurn = 0;
                 return _lastPlayerTurn;

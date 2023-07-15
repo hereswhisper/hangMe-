@@ -27,6 +27,10 @@ namespace HangMe.Engine.Client.Classes.Replicator
 
                 AGSConnector.SendNewGameStateRequest(AGSConnector.webSocket); // Get new updated gamestate again
 
+                AConsoleUtilities.Sleep(1500);
+
+                AGSConnector.SendGetPlayerTurnRequest(AGSConnector.webSocket); // Get player Turn
+
 
                 //Console.WriteLine("Tick");
 
