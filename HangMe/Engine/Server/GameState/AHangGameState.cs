@@ -70,7 +70,7 @@ namespace HangMe.Engine.Server.GameState
         {
             int tempIdx = _lastPlayerTurn + 1;
 
-            if (tempIdx > _players.Count)
+            if (tempIdx >= _players.Count)
             {
                 _lastPlayerTurn = 0;
                 return _lastPlayerTurn;

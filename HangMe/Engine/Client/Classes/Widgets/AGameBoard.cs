@@ -83,22 +83,40 @@ namespace HangMe.Engine.Client.Classes.Widgets
         public static string getWord()
         {
             string finalWord = "";
-            if(AGSConnector._localGameState._selectedWord == "")
+            if (AGSConnector._localGameState._selectedWord == "")
             {
                 return "Waiting for word...";
-            } else
+            }
+            else
             {
-                //Console.WriteLine("DEBUG: " + AGSConnector._localGameState._selectedWord);
+                bool ahh = false;
                 for (int i = 0; i < AGSConnector._localGameState._selectedWord.Length; i++)
                 {
-                    if((i-1) != AGSConnector._localGameState._selectedWord.Length)
+                    if (AGSConnector._localGameState._correctLetters.Count != 0)
                     {
-                        finalWord = finalWord + "_ ";
+                        for (int a = 0; a < AGSConnector._localGameState._correctLetters.Count; a++)
+                        {
+                            if (AGSConnector._localGameState._selectedWord[i] == AGSConnector._localGameState._correctLetters.ToString()[a])
+                            {
+                                ahh = true;
+                                finalWord += AGSConnector._localGameState._correctLetters[a] + " ";
+                            }
+                        }
                     }
-                    
+                    else
+                    {
+                        if (i != AGSConnector._localGameState._selectedWord.Length - 1)
+                        {
+                            finalWord += "_ ";
+                        }
+                    }
+
+                    if(ahh == false)
+                    {
+                        finalWord += "_ ";
+                    }
                 }
             }
-            //Console.WriteLine("DEBUG: " + finalWord);
             return finalWord;
         }
 
@@ -106,15 +124,14 @@ namespace HangMe.Engine.Client.Classes.Widgets
         {
             while(true)
             {
-                //if(a != AGSConnector._localGameState._playerCount || c != AGSConnector._localGameState._selectedWord || d.Count != AGSConnector._localGameState._guessedletters.Count)
-                //{
+                if(a != AGSConnector._localGameState._playerCount || c != AGSConnector._localGameState._selectedWord || d.Count != AGSConnector._localGameState._guessedletters.Count)
+                {
                 //Console.WriteLine("DEBUG: " + AGSConnector._localPlayer.PlayerId);
                     AWidgetCreator a = new AWidgetCreator();
                     a.wipeAllWidgets(true);
                     await a.createWidgetAsync("gameboard");
-                Console.WriteLine("Turn is: " + AGSConnector._localGameState._turnPlayerId);
-                Thread.Sleep(6000);
-                //}
+                //Console.WriteLine("Turn is: " + AGSConnector._localGameState._turnPlayerId);
+                }
             }
             return false; // no update
         }
