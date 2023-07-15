@@ -10,5 +10,6 @@ namespace HangMe
     {
         public static bool WITH_SERVER_CODE = true; // deprecated
         public static int Version = 1; // Version code
+        public static bool bLog = false; // Logging
     }
 }

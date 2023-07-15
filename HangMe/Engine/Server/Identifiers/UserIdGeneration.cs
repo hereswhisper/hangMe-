@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HangMe.Engine.Server.Identifiers
 {
+#if WITH_SERVER_CODE
     internal class UserIdGeneration
     {
         public static string GenerateUserId()
@@ -14,4 +15,5 @@ namespace HangMe.Engine.Server.Identifiers
             return guid.ToString();
         }
     }
+#endif
 }

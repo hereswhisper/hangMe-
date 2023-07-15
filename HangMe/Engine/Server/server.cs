@@ -31,6 +31,7 @@ namespace HangMe.Engine.Server
         private CancellationTokenSource _cancellationTokenSource;
         private bool _RotateTurns = false;
         private static ConcurrentDictionary<string, WebSocket> _clients = new ConcurrentDictionary<string, WebSocket>();
+        private EHangGameVisibility _gameVisibility = EHangGameVisibility.OPEN;
         public static List<string> words = new List<string>
 {
     "apple",
@@ -55,7 +56,7 @@ namespace HangMe.Engine.Server
             _httpListener.Prefixes.Add(url);
             _httpListener.Start();
 
-            Console.WriteLine("WebSocket server started");
+            Console.WriteLine("hangMe Gameserver has started and listening for connections on port " + _port);
 
             _cancellationTokenSource = new CancellationTokenSource();
 
@@ -98,12 +99,66 @@ namespace HangMe.Engine.Server
                     // Cancel the server loop by triggering cancellation
                     _cancellationTokenSource.Cancel();
                     break;
-                } else if (input == "startgame")
+                }
+                else if (input == "/startgame")
                 {
                     _gameState.selectWord(); // selects a word
                     _gameState.RotateTurns(); // Rotate turns
                     _RotateTurns = true; // time to rotate
                     _gameState._gameStarted = true; // notify server game has started.
+                    Console.WriteLine("[AHangGameState INFO]: Game Session has Started!");
+                }
+                else if (input == "/log")
+                {
+                    if (Build.bLog == true)
+                    {
+                        Build.bLog = false;
+                        Console.WriteLine("[hangMe Server Variables INFO]: Logging is now OFF.");
+                    }
+                    else
+                    {
+                        Build.bLog = true;
+                        Console.WriteLine("[hangMe Server Variables INFO]: Logging is now ON.");
+                    }
+                }
+                else if (input == "/kickall")
+                {
+                    foreach (WebSocket clientWebSocket in _clients.Values)
+                    {
+                        var data = new
+                        {
+                            Command = "ClientForceLeave",
+                            Reason = "You have been kicked because the server has kicked everyone. (Game restarting..?)"
+                        };
+
+                        string sjson = JsonConvert.SerializeObject(data);
+                        byte[] messageBytes = Encoding.UTF8.GetBytes(sjson);
+                        await clientWebSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                    }
+                } 
+                else if (input == "/lock")
+                {
+                    if(_gameVisibility == EHangGameVisibility.LOCKED)
+                    {
+                        Console.WriteLine("[GameVisibility INFO]: Game is already locked.");
+                    } else
+                    {
+                        _gameVisibility = EHangGameVisibility.LOCKED;
+                        Console.WriteLine("[GameVisibility INFO]: Game was successfully locked.");
+                    }
+                }
+
+                else if (input == "/unlocked")
+                {
+                    if (_gameVisibility == EHangGameVisibility.OPEN)
+                    {
+                        Console.WriteLine("[GameVisibility INFO]: Game is already unlocked.");
+                    }
+                    else
+                    {
+                        _gameVisibility = EHangGameVisibility.OPEN;
+                        Console.WriteLine("[GameVisibility INFO]: Game was successfully locked.");
+                    }
                 }
 
                 // Process the command
@@ -169,32 +224,70 @@ namespace HangMe.Engine.Server
                 {
                     // Handle received text message
                     string receivedMessage = System.Text.Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    Console.WriteLine("Received: " + receivedMessage);
+                    if(Build.bLog) Console.WriteLine("Received: " + receivedMessage);
 
                     if(receivedMessage != null)
                     {
                         if(receivedMessage == EHangServerFunctions.ServerNotifyUserLogon)
                         {
-                            Console.WriteLine("[hangMe Websocket Server INFO]: Player has connected, sending GameState");
-                            _gameState._playerCount = _gameState._playerCount + 1; // notify of user logon
+                            if(_gameVisibility == EHangGameVisibility.LOCKED)
+                            {
+                                if (Build.bLog) Console.WriteLine("[hangMe Websocket Server INFO]: Player attempted to connect but room is locked.");
+
+
+                                var data = new
+                                {
+                                    Command = "ClientRoomLocked"
+                                };
+
+                                string json = JsonConvert.SerializeObject(data);
+                                byte[] messageBytes = Encoding.UTF8.GetBytes(json);
+                                await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                                //await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+
+                            } else
+                            {
+                                if (Build.bLog) Console.WriteLine("[hangMe Websocket Server INFO]: Player has connected, sending GameState");
+                                _gameState._playerCount = _gameState._playerCount + 1; // notify of user logon
+                            }
+                            
                         }
                         else if (receivedMessage == EHangServerFunctions.ClientRequestGameState)
                         {
-                            var gameStateData = new
+                            if (_gameVisibility == EHangGameVisibility.LOCKED)
                             {
-                                guessedletters = _gameState._guessedLetters,
-                                gameId = _gameState._gameId,
-                                //players = _gameState._players,
-                                playerCount = _gameState._playerCount,
-                                correctLetters = _gameState._correctLetters,
-                                selectedWord = _gameState._currentWord,
-                                nextCommand = EHangServerFunctions.ClientAcknowledgment
-                            };
+                                if (Build.bLog) Console.WriteLine("[hangMe Websocket Server INFO]: Player attempted to connect but room is locked.");
 
-                            string json = JsonConvert.SerializeObject(gameStateData);
-                            byte[] messageBytes = Encoding.UTF8.GetBytes(json);
-                            await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
-                            Console.WriteLine("[hangMe Server INFO]: Sent GameState to Client");
+
+                                var data = new
+                                {
+                                    Command = "ClientRoomLocked"
+                                };
+
+                                string json = JsonConvert.SerializeObject(data);
+                                byte[] messageBytes = Encoding.UTF8.GetBytes(json);
+                                await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                                //await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+
+                            }
+                            else
+                            {
+                                var gameStateData = new
+                                {
+                                    guessedletters = _gameState._guessedLetters,
+                                    gameId = _gameState._gameId,
+                                    //players = _gameState._players,
+                                    playerCount = _gameState._playerCount,
+                                    correctLetters = _gameState._correctLetters,
+                                    selectedWord = _gameState._currentWord,
+                                    nextCommand = EHangServerFunctions.ClientAcknowledgment
+                                };
+
+                                string json = JsonConvert.SerializeObject(gameStateData);
+                                byte[] messageBytes = Encoding.UTF8.GetBytes(json);
+                                await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+                                if (Build.bLog) Console.WriteLine("[hangMe Server INFO]: Sent GameState to Client");
+                            }
                         }
                         else if (receivedMessage == EHangServerFunctions.ClientRegister)
                         {
@@ -212,7 +305,7 @@ namespace HangMe.Engine.Server
                             byte[] messageBytes = Encoding.UTF8.GetBytes(json);
                             await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
 
-                            Console.WriteLine("[hangMe Server INFO]: Registered client as new player under id: " + _newPlayer.userid);
+                            if (Build.bLog) Console.WriteLine("[hangMe Server INFO]: Registered client as new player under id: " + _newPlayer.userid);
                         }
                         else if (receivedMessage.StartsWith("{") ||  receivedMessage.StartsWith("[")) {
                             // assume it's a json

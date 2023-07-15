@@ -1,4 +1,7 @@
-﻿using HangMe.Engine.Client.Classes.Widgets;
+﻿using HangMe.Engine.Client.Classes.Create;
+using HangMe.Engine.Client.Classes.Skeletons;
+using HangMe.Engine.Client.Classes.Widgets;
+using HangMe.Engine.Common;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -211,7 +214,7 @@ namespace HangMe.Engine.Client.Classes.Connectors
                         }
                         catch (JsonException ex)
                         {
-                            Console.WriteLine("Error parsing JSON: " + ex.Message);
+                            if (Build.bLog) Console.WriteLine("Error parsing JSON: " + ex.Message);
                         }
                     }
                     else if (receivedMessage == "OK")
@@ -285,7 +288,34 @@ namespace HangMe.Engine.Client.Classes.Connectors
                             _localGameState._selectedWord = selectedWord;
                         }
 
-                        if(command == "ClientWhoPlayerTurn")
+                        // Kicked or something
+                        if(command == "ClientForceLeave")
+                        {
+                            string Reason = json["Reason"]?.ToString();
+
+                            AConsoleUtilities.ShowMessageBox("You've been kicked. Reason: " + Reason + ". Closing hangMe in 3 seconds");
+
+                            Thread.Sleep(3000);
+
+                            Environment.Exit(0);
+                        }
+
+                        if(command == "ClientRoomLocked")
+                        {
+                            if (AGSConnector._localGameState._playerCount != 0) return; // not important to you
+
+                            Console.Clear();
+                            Console.WriteLine("This room is currently locked. Please restart your game to play");
+
+                            Thread.Sleep(3000);
+                            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
+                            AWidgetCreator a = new AWidgetCreator();
+
+                            a.wipeAllWidgets(true);
+                            await a.createWidgetAsync("startmenu");
+                        }
+
+                        if (command == "ClientWhoPlayerTurn")
                         {
                             string userid = json["UserId"]?.ToString();
 

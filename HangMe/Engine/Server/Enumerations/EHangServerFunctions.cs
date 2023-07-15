@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace HangMe.Engine.Server.Enumerations
 {
+#if WITH_SERVER_CODE
     public struct EHangServerFunctions
     {
         public static string ServerNotifyUserLogon = "ServerNotifyUserLogon";
@@ -15,4 +16,5 @@ namespace HangMe.Engine.Server.Enumerations
         public static string ClientAcknowledgment = "ClientAcknowledgment";
         public static string ClientRegister = "ClientRegisterPlayer";
     }
+#endif
 }

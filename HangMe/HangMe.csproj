@@ -70,6 +70,7 @@
     <Compile Include="Engine\Client\Classes\Widgets\AConnectionScreen.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\AConnectIPScreen.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\AGameBoard.cs" />
+    <Compile Include="Engine\Client\Classes\Widgets\AKickedScreen.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\ALoginScreen.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\AStartMenuScreen.cs" />
     <Compile Include="Engine\Client\Classes\Widgets\ATemplateScreen.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="Engine\Common\AMusicSheets.cs" />
     <Compile Include="Engine\Server\Challenge\ChallengeConfig.cs" />
     <Compile Include="Engine\Server\Enumerations\EHangClientType.cs" />
+    <Compile Include="Engine\Server\Enumerations\EHangGameVisibility.cs" />
     <Compile Include="Engine\Server\Enumerations\EHangMatchState.cs" />
     <Compile Include="Engine\Server\Enumerations\EHangServerFunctions.cs" />
     <Compile Include="Engine\Server\GameState\AEngineBaseGameState.cs" />

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace HangMe.Engine.Server.PlayerState
 {
+#if WITH_SERVER_CODE
     internal class PHangPlayer
     {
         public string name = "";
@@ -24,4 +25,5 @@ namespace HangMe.Engine.Server.PlayerState
             // isAccount will be added when I feel like to finish API
         }
     }
+#endif
 }

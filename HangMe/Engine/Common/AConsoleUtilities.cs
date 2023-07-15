@@ -38,5 +38,15 @@ namespace HangMe.Engine.Common
             Thread.Sleep(time);
             return; // return to normal execution
         }
+
+        public static void ShowMessageBox(string message)
+        {
+            int width = Console.WindowWidth - 4;
+            string horizontalLine = new string('-', width);
+
+            Console.WriteLine(horizontalLine);
+            Console.WriteLine($"| {message.PadRight(width)} |");
+            Console.WriteLine(horizontalLine);
+        }
     }
 }
