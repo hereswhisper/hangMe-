@@ -27,7 +27,14 @@ namespace HangMe.Engine.Server
         private bool _isDedicated;
         private HttpListener _httpListener;
         private CancellationTokenSource _cancellationTokenSource;
-        private Server.GameState.AHangGameState _gameState = new Server.GameState.AHangGameState(null);
+        public static List<string> words = new List<string>
+{
+    "apple",
+    "banana",
+    "cherry",
+    "orange"
+};
+        private Server.GameState.AHangGameState _gameState = new Server.GameState.AHangGameState(words);
 
         public server(int port = 7777, string host = "http://localhost:", bool isLocal = true, bool isDedicated = true) { 
             _port = port;
@@ -106,7 +113,7 @@ namespace HangMe.Engine.Server
                             string json = JsonConvert.SerializeObject(gameStateData);
                             byte[] messageBytes = Encoding.UTF8.GetBytes(json);
                             await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
-                            Console.WriteLine("[hangMe Server INFO]: Sent GameState to Client. Awaiting Tick Thread...");
+                            Console.WriteLine("[hangMe Server INFO]: Sent GameState to Client");
                         } else if (receivedMessage.StartsWith("{") ||  receivedMessage.StartsWith("[")) {
                             // assume it's a json
 
@@ -128,6 +135,21 @@ namespace HangMe.Engine.Server
                                     await webSocket.SendAsync(new ArraySegment<byte>(responseBytes), WebSocketMessageType.Text, true, CancellationToken.None);
                                 }
                             }
+                        } else if (receivedMessage == EHangServerFunctions.ClientRequestNewGameState)
+                        {
+                            var gameStateData = new
+                            {
+                                guessedletters = _gameState._guessedLetters,
+                                gameId = _gameState._gameId,
+                                players = _gameState._players,
+                                playerCount = _gameState._playerCount,
+                                correctLetters = _gameState._correctLetters,
+                                Command = "ClientRequestNewGameState"
+                            };
+
+                            string json = JsonConvert.SerializeObject(gameStateData);
+                            byte[] messageBytes = Encoding.UTF8.GetBytes(json);
+                            await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
                         }
                     }
 

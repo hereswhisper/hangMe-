@@ -21,6 +21,7 @@ namespace HangMe.Engine.Client.Classes.Create
             ALoginScreen _aLoginScreen = new ALoginScreen();
             AConnectIPScreen _aConnectIpScreen = new AConnectIPScreen();
             AConnectionScreen _aConnectionScreen = new AConnectionScreen();
+            AGameBoard _aGameBoard = new AGameBoard();
 
             bool createdWidget = false;
             switch (name)
@@ -44,6 +45,10 @@ namespace HangMe.Engine.Client.Classes.Create
                     break;
                 case "connectionscreen":
                     await _aConnectionScreen.showContents(arg);
+                    createdWidget = true;
+                    break;
+                case "gameboard":
+                    await _aGameBoard.showContents();
                     createdWidget = true;
                     break;
             }

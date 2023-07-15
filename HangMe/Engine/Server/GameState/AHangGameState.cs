@@ -11,10 +11,12 @@ namespace HangMe.Engine.Server.GameState
     internal class AHangGameState
     {
         public List<string> _guessedLetters = new List<string>(); // Where the player's are gonna guess
-        public List<string> _possibleWords = new List<string>(); // Possible words the gamestate can choose
+        public static List<string> _possibleWords = new List<string>(); // Possible words the gamestate can choose
         public int _gameId = -1; // the unique Game identification code. (if the GameId is -1, there's been a issue).
         public string[] _players = { }; // player names who are in the session
         public int _playerCount = 0; // Player Count
+        public static string _currentWord = ""; // the Current word
+
         public List<string> _correctLetters = new List<string>(); // Letters that are correct
 
         /// <summary>
@@ -56,6 +58,17 @@ namespace HangMe.Engine.Server.GameState
             _guessedLetters.Add(letter);
             Console.WriteLine("[HangGameState INFO]: Successfully added " + letter + "to GameState!");
             return 0; // completed and ready for next tick
+        }
+
+        /// <summary>
+        /// Randomly selects a word from _possibleWords
+        /// </summary>
+        public static void selectWord()
+        {
+            Random random = new Random();
+            string randomWord = _possibleWords[random.Next(0, _possibleWords.Count)];
+            _currentWord = randomWord;
+            Console.WriteLine("[HangGameState INFO]: Successfully chosen random word and written to GameState. Word is: " + _currentWord);
         }
 
         public int EndGame()

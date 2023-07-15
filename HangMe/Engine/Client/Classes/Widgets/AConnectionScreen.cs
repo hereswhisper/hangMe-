@@ -1,5 +1,6 @@
 ﻿using HangMe.Engine.Client.Classes.Connectors;
 using HangMe.Engine.Client.Classes.Create;
+using HangMe.Engine.Client.Classes.Replicator;
 using HangMe.Engine.Common;
 using System;
 using System.Collections.Generic;
@@ -44,6 +45,17 @@ namespace HangMe.Engine.Client.Classes.Widgets
 
             ShowDroppingScreen(); // We are all ready for it, dropping Connecting Screen
 
+            Task tickTask = Task.Run(() => AReplicator.TickThread(1));
+
+            // Additional code here that can run concurrently with TickThread
+
+            await Task.Delay(1); // Allow a small delay to yield control back to the main thread
+
+            await createGameBoard();
+
+            await tickTask;
+
+
             return;
         }
 
@@ -71,6 +83,15 @@ namespace HangMe.Engine.Client.Classes.Widgets
         {
             Console.Clear(); // ONLY TIME WHERE THIS IS ALLOWED.
             AScreenPositioner.MiddleCenterScreen("Loading Gameboard...");
+            return true;
+        }
+
+        public static async Task<bool> createGameBoard()
+        {
+            Console.WriteLine("a");
+            AWidgetCreator a = new AWidgetCreator(); // ONLY TIME WHERE THIS IS ALLOWED.
+            a.wipeAllWidgets(true);
+            await a.createWidgetAsync("gameboard");
             return true;
         }
     }

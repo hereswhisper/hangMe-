@@ -1,4 +1,6 @@
-﻿using System;
+﻿using HangMe.Engine.Client.Classes.Connectors;
+using HangMe.Engine.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,13 @@ namespace HangMe.Engine.Client.Classes.Replicator
                 {
                     continue;
                 }
+
+                AGSConnector.SendNewGameStateRequest(AGSConnector.webSocket); // Get new updated gamestate again
+
+
+                //Console.WriteLine("Tick");
+
+                AConsoleUtilities.Sleep(1500); // sleep till next tick
             }
         }
     }

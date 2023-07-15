@@ -86,6 +86,13 @@ namespace HangMe.Engine.Client.Classes.Connectors
             await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
         }
 
+        // ClientRequestNewGameState
+        public static async void SendNewGameStateRequest(ClientWebSocket webSocket)
+        {
+            byte[] messageBytes = System.Text.Encoding.UTF8.GetBytes("ClientRequestNewGameState");
+            await webSocket.SendAsync(new ArraySegment<byte>(messageBytes), WebSocketMessageType.Text, true, CancellationToken.None);
+        }
+
         public static async void SendAcknowledgementRequest(ClientWebSocket webSocket)
         {
             var data = new
@@ -125,7 +132,7 @@ namespace HangMe.Engine.Client.Classes.Connectors
                 if (result.MessageType == WebSocketMessageType.Text)
                 {
                     string receivedMessage = System.Text.Encoding.UTF8.GetString(receiveBuffer, 0, result.Count);
-                    Console.WriteLine("Received: " + receivedMessage);
+                    //Console.WriteLine("Received: " + receivedMessage);
 
                     if (Global.isConnected == true && Global.hasRecievedGameState == false)
                     {
@@ -179,6 +186,31 @@ namespace HangMe.Engine.Client.Classes.Connectors
                         await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
                         Console.Clear();
                         Console.WriteLine("Disconnected: Unauthorized client detected. Please install the latest update on our Discord.");
+                    } else if (receivedMessage.StartsWith("{") ||  receivedMessage.StartsWith("[")) {
+                        // ASSUME IT'S A JSON
+                        var json = JObject.Parse(receivedMessage);
+
+                        string command = json["Command"]?.ToString();
+
+                        if(command == "ClientRequestNewGameState")
+                        {
+                            JArray guessedLettersArray = json["guessedletters"] as JArray;
+                            int gameId = json["gameId"]?.ToObject<int>() ?? -1;
+                            JArray playersArray = json["players"] as JArray;
+                            int playerCount = json["playerCount"]?.ToObject<int>() ?? 0;
+                            JArray correctLettersArray = json["correctLetters"] as JArray;
+                            string nextCommand = json["nextCommand"]?.ToString();
+
+                            List<string> guessedLetters = guessedLettersArray?.ToObject<List<string>>();
+                            List<string> correctLetters = correctLettersArray?.ToObject<List<string>>();
+                            string[] PlayersArrayClean = playersArray?.ToObject<string[]>();
+
+                            _localGameState._gameId = gameId;
+                            _localGameState._players = PlayersArrayClean;
+                            _localGameState._guessedletters = guessedLetters;
+                            _localGameState._playerCount = playerCount;
+                            _localGameState._correctLetters = correctLetters;
+                        }
                     }
                 }
                 else if (result.MessageType == WebSocketMessageType.Close)
