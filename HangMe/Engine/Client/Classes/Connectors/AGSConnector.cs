@@ -300,6 +300,17 @@ namespace HangMe.Engine.Client.Classes.Connectors
                             Environment.Exit(0);
                         }
 
+                        if(command == "ServerEndTurn")
+                        {
+                            string UserID = json["UserID"]?.ToString(); // user Id
+
+                            if (AGSConnector._localPlayer.PlayerId == UserID)
+                            {
+                                AGSConnector._localPlayer.myTurn = false; // remove turn.
+                                AGameBoard.ForceRefreshGameboard(); // Force refresh <3
+                            }
+                        }
+
                         if(command == "ClientRoomLocked")
                         {
                             if (AGSConnector._localGameState._playerCount != 0) return; // not important to you
