@@ -1,5 +1,5 @@
 # hangMe!
-hangMe! is a full game written entirely in c# (Client, Gameservers, API, etc) .NET 4.8. This includes the entire source code for it.
+hangMe! is a unfinished game written entirely in c# (Client, Gameservers, API, etc) .NET 4.8. This includes the entire source code for it. (I will be finishing it in the future)
 
 # Classes Implemented
 This includes Enums and Classes:<br>
