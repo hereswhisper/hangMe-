@@ -1,4 +1,5 @@
 ﻿using HangMe.Engine.Client.Classes.Create;
+using HangMe.Engine.Client.Classes.Functions;
 using HangMe.Engine.Client.Classes.Skeletons;
 using HangMe.Engine.Client.Classes.Widgets;
 using HangMe.Engine.Common;
@@ -179,38 +180,7 @@ namespace HangMe.Engine.Client.Classes.Connectors
                     {
                         try
                         {
-                            var json = JObject.Parse(receivedMessage);
-
-                            // Extract values from the JSON object
-                            JArray guessedLettersArray = json["guessedletters"] as JArray;
-                            int gameId = json["gameId"]?.ToObject<int>() ?? -1;
-                            //JArray playersArray = json["players"] as JArray;
-                            int playerCount = json["playerCount"]?.ToObject<int>() ?? 0;
-                            JArray correctLettersArray = json["correctLetters"] as JArray;
-                            string nextCommand = json["nextCommand"]?.ToString();
-
-                            List<string> guessedLetters = guessedLettersArray?.ToObject<List<string>>();
-                            List<string> correctLetters = correctLettersArray?.ToObject<List<string>>();
-                            //string[] PlayersArrayClean = playersArray?.ToObject<string[]>();
-
-                            _localGameState._gameId = gameId;
-                            //_localGameState._players = PlayersArrayClean;
-                            _localGameState._guessedletters = guessedLetters;
-                            _localGameState._playerCount = playerCount;
-                            _localGameState._correctLetters = correctLetters;
-
-                            Global.hasRecievedGameState = true; // first time get GameState done! time to make sure I exist
-
-                            // Process the extracted JSON data
-                            // ...
-
-                            // Example: Print the extracted values
-                            //Console.WriteLine("Guessed Letters: " + guessedLettersArray?.ToString());
-                            //Console.WriteLine("Game ID: " + gameId);
-                            //Console.WriteLine("Players: " + playersArray?.ToString());
-                            ///Console.WriteLine("Player Count: " + playerCount);
-                            //Console.WriteLine("Correct Letters: " + correctLettersArray?.ToString());
-                            //Console.WriteLine("Next Command: " + nextCommand);
+                            ClientSetupLocalGameState.execute(receivedMessage, _localGameState);
                         }
                         catch (JsonException ex)
                         {
@@ -230,18 +200,7 @@ namespace HangMe.Engine.Client.Classes.Connectors
                     }
                     else if (receivedMessage.Contains("ServerRegisterInfo"))
                     {
-                        var json = JObject.Parse(receivedMessage);
-                        Console.Beep(); // notify that it's registered
-                        //Console.WriteLine("Alive!");
-                        //string username = json["Name"]?.ToString();
-                        string id = json["UserId"]?.ToString();
-
-                        //Console.WriteLine(id);
-                        Thread.Sleep(2000);
-
-                        //_localPlayer.name = username;
-                        _localPlayer.PlayerId = id;
-                        Global.hasRegistered = true; // User has registered
+                        ServerRegisterInfo.execute(receivedMessage, _localPlayer);
                     }
                     else if (receivedMessage.StartsWith("{") ||  receivedMessage.StartsWith("[")) {
                         // ASSUME IT'S A JSON
@@ -253,118 +212,44 @@ namespace HangMe.Engine.Client.Classes.Connectors
 
                         if (command == "ServerRegisterInfo")
                         {
-                            Console.Beep();
-                            //Console.WriteLine("Alive!");
-                            //string username = json["Name"]?.ToString();
-                            string id = json["UserId"]?.ToString();
-
-                            //Console.WriteLine(id);
-                            Thread.Sleep(2000);
-
-                            //_localPlayer.name = username;
-                            _localPlayer.PlayerId = id;
-                            Global.hasRegistered = true; // User has registered
+                            ServerRegisterInfo.execute(receivedMessage, _localPlayer);
                         }
 
                         if (command == "ClientRequestNewGameState")
                         {
-                            JArray guessedLettersArray = json["guessedletters"] as JArray;
-                            int gameId = json["gameId"]?.ToObject<int>() ?? -1;
-                            //JArray playersArray = json["players"] as JArray;
-                            int playerCount = json["playerCount"]?.ToObject<int>() ?? 0;
-                            JArray correctLettersArray = json["correctLetters"] as JArray;
-                            string selectedWord = json["selectedWord"]?.ToString();
-                            string nextCommand = json["nextCommand"]?.ToString();
-
-                            List<string> guessedLetters = guessedLettersArray?.ToObject<List<string>>();
-                            List<string> correctLetters = correctLettersArray?.ToObject<List<string>>();
-                            //string[] PlayersArrayClean = playersArray?.ToObject<string[]>();
-
-                            _localGameState._gameId = gameId;
-                            //_localGameState._players = PlayersArrayClean;
-                            _localGameState._guessedletters = guessedLetters;
-                            _localGameState._playerCount = playerCount;
-                            _localGameState._correctLetters = correctLetters;
-                            _localGameState._selectedWord = selectedWord;
+                            ClientRequestNewGameState.execute(json, _localGameState);
                         }
 
                         // Kicked or something
                         if(command == "ClientForceLeave")
                         {
-                            string Reason = json["Reason"]?.ToString();
-
-                            AConsoleUtilities.ShowMessageBox("You've been kicked. Reason: " + Reason + ". Closing hangMe in 3 seconds");
-
-                            Thread.Sleep(3000);
-
-                            Environment.Exit(0);
+                            ClientForceLeave.execute(json);
                         }
 
                         if(command == "ServerEndTurn")
                         {
-                            string UserID = json["UserID"]?.ToString(); // user Id
-
-                            if (AGSConnector._localPlayer.PlayerId == UserID)
-                            {
-                                AGSConnector._localPlayer.myTurn = false; // remove turn.
-                                AGameBoard.ForceRefreshGameboard(); // Force refresh <3
-                            }
+                            ServerEndTurn.execute(json);
                         }
 
                         if(command == "ClientRoomLocked")
                         {
-                            if (AGSConnector._localGameState._playerCount != 0) return; // not important to you
-
-                            Console.Clear();
-                            Console.WriteLine("This room is currently locked. Please restart your game to play");
-
-                            Thread.Sleep(3000);
-                            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", CancellationToken.None);
-                            AWidgetCreator a = new AWidgetCreator();
-
-                            a.wipeAllWidgets(true);
-                            await a.createWidgetAsync("startmenu");
+                            ClientRoomLocked.execute(webSocket);
                         }
 
                         if (command == "ClientWhoPlayerTurn")
                         {
-                            string userid = json["UserId"]?.ToString();
-
-                            if(AGSConnector._localPlayer.PlayerId == userid)
-                            {
-                                AGSConnector._localPlayer.myTurn = true;
-                                AGameBoard.ForceRefreshGameboard(); // force refresh board
-                            }
+                            ClientWhoPlayerTurn.execute(json);
                         }
 
                         // most simple part of the code ever
                         if(command == "ServerEndTurn")
                         {
-                            AGameBoard.ForceRefreshGameboard(); // force gameboard refresh.
+                            ServerEndTurn.execute(json);
                         }
 
                         if(command == "ServerRotateTurns")
                         {
-                            Console.Beep();
-                            Console.WriteLine("DEBUG");
-                            string id = json["UserId"]?.ToString();
-                            Console.WriteLine("DEBUG: " + id);
-                            Console.WriteLine("Your Id DEBUG: " + _localPlayer.PlayerId);
-
-                            if (_localPlayer.PlayerId == id)
-                            {
-                                _localPlayer.myTurn = true;
-                                _localPlayer.importantAnnouncement = "it's " + id + " turn!";
-                                _localGameState._turnPlayerId = id;
-                                AGameBoard.ForceRefreshGameboard(); // force refresh game board so it can have the new turn
-                                //AGameBoard.Guess(); // Make user guess
-                            } else
-                            {
-                                _localPlayer.myTurn = false;
-                                _localGameState._turnPlayerId = id;
-                                _localPlayer.importantAnnouncement = "it's " + id + " turn!";
-                                AGameBoard.ForceRefreshGameboard(); // force refresh game board so it can have the new turn
-                            }
+                            ServerRotateTurns.execute(json, _localPlayer, _localGameState);
                         }
                     }
                 }

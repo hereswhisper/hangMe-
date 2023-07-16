@@ -61,6 +61,14 @@
     <Compile Include="Engine\Client\Classes\Enumerations\EHangClientFunctions.cs" />
     <Compile Include="Engine\Client\Classes\Enumerations\EHangClientType.cs" />
     <Compile Include="Engine\Client\Classes\Enumerations\EHangMatchState.cs" />
+    <Compile Include="Engine\Client\Classes\Functions\ClientForceLeave.cs" />
+    <Compile Include="Engine\Client\Classes\Functions\ClientRequestNewGameState.cs" />
+    <Compile Include="Engine\Client\Classes\Functions\ClientRoomLocked.cs" />
+    <Compile Include="Engine\Client\Classes\Functions\ClientSetupLocalGameState.cs" />
+    <Compile Include="Engine\Client\Classes\Functions\ClientWhoPlayerTurn.cs" />
+    <Compile Include="Engine\Client\Classes\Functions\ServerEndTurn.cs" />
+    <Compile Include="Engine\Client\Classes\Functions\ServerRegisterInfo.cs" />
+    <Compile Include="Engine\Client\Classes\Functions\ServerRotateTurns.cs" />
     <Compile Include="Engine\Client\Classes\Global.cs" />
     <Compile Include="Engine\Client\Classes\Music\AMusicPlayer.cs" />
     <Compile Include="Engine\Client\Classes\Replicator\AReplicator.cs" />

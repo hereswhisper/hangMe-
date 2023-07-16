@@ -105,10 +105,7 @@ namespace HangMe.Engine.Client.Classes.Widgets
                     }
                     else
                     {
-                        if (i != AGSConnector._localGameState._selectedWord.Length - 1)
-                        {
                             finalWord += "_ ";
-                        }
                     }
 
                     if(ahh == false)
